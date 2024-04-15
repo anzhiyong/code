@@ -6,6 +6,10 @@ using namespace std;
 #include<assert.h>
 class Date
 {
+
+	// 友元函数声明
+	friend ostream& operator<<(ostream& out, const Date& d);
+	friend istream& operator>>(istream& in, Date& d);
 public:
 	Date(int year = 1900, int month = 1, int day = 1);
 	void Print()const;
@@ -35,11 +39,11 @@ public:
 
 	//d1 +=100;
 	Date& operator+=(int day);
-	Date operator+=(int day) const;
+	Date operator+(int day);
 	//d1 -=100;
 	Date& operator-=(int day);
 	//d1-100;
-	Date operator-(int day);
+	Date operator-(int day) const;
 	//d1-d2
 	int operator-(const Date& d) const;
 
@@ -48,7 +52,7 @@ public:
 	Date operator++(int);
 
 	Date& operator--();
-	Date operator--() const;
+	Date operator--(int);
 
 private:
 	int _year;
@@ -58,3 +62,7 @@ private:
 
 
 };
+
+//重载
+ostream& operator<<(ostream& out, const Date& d);
+istream& operator>>(istream& in, Date& d);
