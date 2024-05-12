@@ -10,6 +10,14 @@ namespace an
 		_capacity = _size;
 		strcpy(_str, str);
 	}
+
+	string::string(const string& s)
+	{
+		_str = new char[s._capacity + 1];
+		strcpy(_str, s._str);
+		_size = s._size;
+		_capacity = s._capacity;
+	}
 	string::~string()
 	{
 		delete [] _str;
@@ -36,5 +44,86 @@ namespace an
 	string::iterator string::end()
 	{
 		return _str + _size;
+	}
+
+	string::const_iterator string::begin() const
+	{
+		return _str;
+	}
+	string::const_iterator string::end() const
+	{
+		return _str + _size;
+	}
+	
+	void string::reserve(size_t n)
+	{
+		if (n > _capacity)
+		{
+			char* tmp = new char[n + 1];
+			strcpy(tmp, _str);
+			delete[] _str;
+			
+			_str = tmp;
+			_capacity = n;
+		}
+	}
+
+	void string::push_back(char ch)
+	{
+		if (_size == _capacity)
+		{
+			size_t newcapacity = _capacity == 0 ? 4 : _capacity * 2;
+			reserve(newcapacity);
+		}
+		_str[_size] = ch;
+		_str[_size + 1] = '\0';
+		_size++;
+	}
+
+	void string::append(const char* str)
+	{
+		size_t len = strlen(str);
+		if (len + _size > _capacity)
+		{
+			reserve(len + _size);
+		}
+		strcpy(_str + _size, str);
+		_size += len;
+	}
+	void string::insert(size_t pos,const char ch)
+	{
+		assert(pos <= _size);
+		if (_size == _capacity)
+		{
+			size_t newcapacity = _capacity == 0 ? 4 : _capacity * 2;
+			reserve(newcapacity);
+		}
+		size_t end = _size-1;
+		while (end>=pos)
+		{
+			_str[end + 1] = _str[end];
+			end--;
+		}
+		_str[pos] = ch;
+		_size++;
+	}
+	void string::insert(size_t pos,const char* str)
+	{
+		assert(pos <= _size);
+		if (_size == _capacity)
+		{
+			size_t newcapacity = _capacity == 0 ? 4 : _capacity * 2;
+			reserve(newcapacity);
+		}
+		size_t len = strlen(str);
+		size_t end = _size +len-1;
+		
+		while (pos+len<=end)
+		{
+			_str[end ] = _str[end-len];
+			end--;
+		}
+		memcpy(_str + pos, str, len);
+		_size += len;
 	}
 }

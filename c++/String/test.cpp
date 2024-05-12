@@ -70,19 +70,27 @@ namespace an
 {
 	void test_string1()
 	{
-		an::string a("anzhiyong");
+		string a("anzhiyong");
+		string s1(a);
 		string::iterator i = a.begin();
+		/*for (auto e : a)
+		{
+			cout << e;
+		}
+		cout << endl;*/
+		/*a.push_back('x');
+		for (auto e : a)
+		{
+			cout << e;
+		}*/
+		//a.append("×îÀ÷º¦");
+		a.insert(1,"xxx");
 		for (auto e : a)
 		{
 			cout << e;
 		}
 		cout << endl;
-		while (i != a.end())
-		{
-			cout << *i;
-			++i;
-		}
-		cout << endl;
+
 		//cout << a[2] << endl;
 	}
 }
