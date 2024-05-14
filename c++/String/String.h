@@ -36,10 +36,13 @@ namespace an
 
 		void insert(size_t pos, const char ch);
 		void insert(size_t pos, const char* str);
+		void erase(size_t pos = 0, size_t len = npos);
 	private:
 		char* _str; //字符串指针
 		int _size;  //长度
 		int _capacity;//空间
+
+		const static size_t npos;
 		
 	};
 }

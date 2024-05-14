@@ -2,6 +2,7 @@
 
 namespace an
 {
+	const size_t string::npos = -1;
 	
 	string::string(const char* str)
 		:_size(strlen(str))
@@ -126,4 +127,23 @@ namespace an
 		memcpy(_str + pos, str, len);
 		_size += len;
 	}
+	void string::erase(size_t pos, size_t len)
+	{
+		if (len > _size - pos)
+		{
+			_str[pos] = '\0';
+			_size = pos;
+		}
+		else
+		{
+			strcpy(_str + pos, _str + pos + len);
+			_size -= len;
+		}
+		
+	}
+
+
+
+
+
 }

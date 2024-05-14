@@ -71,7 +71,7 @@ namespace an
 	void test_string1()
 	{
 		string a("anzhiyong");
-		string s1(a);
+		
 		string::iterator i = a.begin();
 		/*for (auto e : a)
 		{
@@ -92,6 +92,13 @@ namespace an
 		cout << endl;
 
 		//cout << a[2] << endl;
+		string s1("anzhiyong");
+		s1.erase(3, 10);
+		for (auto e : s1)
+		{
+			cout << e;
+		}
+		cout << endl;
 	}
 }
 
