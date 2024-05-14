@@ -84,7 +84,7 @@ namespace an
 			cout << e;
 		}*/
 		//a.append("×îÀ÷º¦");
-		a.insert(1,"xxx");
+		
 		for (auto e : a)
 		{
 			cout << e;
@@ -93,17 +93,62 @@ namespace an
 
 		//cout << a[2] << endl;
 		string s1("anzhiyong");
-		s1.erase(3, 10);
+		s1.erase(1, 2);
 		for (auto e : s1)
 		{
 			cout << e;
 		}
 		cout << endl;
+
+		string s2("anzhiyong");
+		cout << s2.find("zhi");
+		/*for (auto e : s2)
+		{
+			cout << e;
+		}*/
+		cout << endl;
+	}
+
+	void test_string2()
+	{
+		string s1("anz");
+		s1 += "hiyong";
+		s1 += 'x';
+		string::const_iterator i = s1.begin();
+		while ( i !=s1.end())
+		{
+			cout << *i;
+			i++;
+		}
+	}
+
+	void test_string3()
+	{
+		string s1("anzhiyong");
+		
+		string s = s1.substr(2, 3);
+		string::const_iterator i = s.begin();
+		while (i != s.end())
+		{
+			cout << *i;
+			i++;
+		}
+		
+	}
+
+	void test_string4()
+	{
+		string s1("anzhiyong");
+		string s2("aljajka");
+		cout << s1 << endl;
+		s1 = s2;
+		cout << s1 << endl;
+
 	}
 }
 
 int main()
 {
-	an::test_string1();
+	an::test_string4();
 	return 0;
 }

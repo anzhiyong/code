@@ -19,6 +19,20 @@ namespace an
 		_size = s._size;
 		_capacity = s._capacity;
 	}
+	string& string::operator=(const string& s)
+	{
+		if (*this != s)
+		{
+			char* tmp = new char[s._capacity + 1];
+			strcpy(tmp, s._str);
+			delete[] _str;
+			_str = tmp;
+			_size = s._size;
+			_capacity = s._capacity;
+		}
+
+		return *this;
+	}
 	string::~string()
 	{
 		delete [] _str;
@@ -35,9 +49,14 @@ namespace an
 	}
 	char& string::operator[](size_t pos)
 	{
+		assert(pos < _size);
 		return _str[pos];
 	}
-
+	const char& string::operator[](size_t pos) const
+	{
+		assert(pos < _size);
+		return _str[pos];
+	}
 	string::iterator string::begin()
 	{
 		return _str;
@@ -91,6 +110,16 @@ namespace an
 		strcpy(_str + _size, str);
 		_size += len;
 	}
+
+	void string::operator+=(char ch)
+	{
+		push_back(ch);
+	}
+	void string::operator+=(const char* str)
+	{
+		append(str);
+	}
+
 	void string::insert(size_t pos,const char ch)
 	{
 		assert(pos <= _size);
@@ -139,8 +168,105 @@ namespace an
 			strcpy(_str + pos, _str + pos + len);
 			_size -= len;
 		}
+	}
+
+	size_t string::find(char ch, size_t npos)
+	{
+		for (size_t i = npos; i < _size; i++)
+		{
+			if (_str[i] == ch)
+			{
+				return i;
+			}
+		}
+		return npos;
+	}
+	size_t string::find(const char* str, size_t npos)
+	{
+		char* tmp = strstr(_str + npos, str);
+		return tmp - _str;
+	}
+
+	void string::swap(string& s)
+	{
+		std::swap(_str, s._str);
+		std::swap(_size, s._size);
+		std::swap(_capacity, s._capacity);
+	}
+
+	string string::substr(size_t pos, size_t len)
+	{
+		if (len > _size - pos)
+		{
+			string sub(_str + pos);
+			return sub;
+		}
+		else
+		{
+			string sub;
+			reserve(len);
+			for (size_t i = 0; i < len; i++)
+			{
+				sub += _str[pos + i];
+			}
+			return sub;
+		}
 		
 	}
+
+
+	bool string::operator<(const string& s) const
+	{
+		return strcmp(_str, s._str) < 0;
+	}
+	bool string::operator>(const string& s) const
+	{
+		return !(*this <= s);
+	}
+	bool string::operator<=(const string& s) const
+	{
+		return *this < s || *this == s;
+	}
+	bool string::operator>=(const string& s) const
+	{
+		return !(*this < s);
+	}
+	bool string::operator==(const string& s) const
+	{
+		return strcmp(_str, s._str) == 0;
+	}
+	bool string::operator!=(const string& s) const
+	{
+		return !(*this == s);
+	}
+	void string::clear()
+	{
+		_str[0] = '\0';
+		_size = 0;
+	}
+	istream& operator>> (istream& is, string& str)
+	{
+		str.clear();
+		char ch = is.get();
+		while (ch != ' ' && ch != '\n')
+		{
+			str += ch;
+			ch = is.get();
+		}
+		return is;
+	}
+	ostream& operator<< (ostream& os, const string& str)
+	{
+		for (size_t i = 0; i < str.size(); i++)
+		{
+			os << str[i];
+		}
+		return os;
+	}
+
+
+
+
 
 
 
