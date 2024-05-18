@@ -21,7 +21,7 @@ namespace an
 
 		string(const char* str = " ");//有参构造
 		string(const string& s);
-		string& operator=(const string& s);
+		string& operator=(string s);
 		~string();
 
 		const char* c_str() const;//打印字符串内容

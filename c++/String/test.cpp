@@ -145,10 +145,22 @@ namespace an
 		cout << s1 << endl;
 
 	}
+	void test_string5()
+	{
+		string s1("anzhiyong");
+		string s2(s1);
+		//cout << s1 << endl;
+		//s1 = s2;
+		string s3;
+		s3 = s1;
+		cout << s3 << endl;
+		
+
+	}
 }
 
 int main()
 {
-	an::test_string4();
+	an::test_string5();
 	return 0;
 }

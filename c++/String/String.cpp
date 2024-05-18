@@ -12,14 +12,21 @@ namespace an
 		strcpy(_str, str);
 	}
 
-	string::string(const string& s)
+	/*string::string(const string& s)
 	{
 		_str = new char[s._capacity + 1];
 		strcpy(_str, s._str);
 		_size = s._size;
 		_capacity = s._capacity;
+	}*/
+	string::string(const string& s)
+	{
+		string tmp(s._str);
+		swap(tmp);
+		
 	}
-	string& string::operator=(const string& s)
+
+	/*string& string::operator=(const string& s)
 	{
 		if (*this != s)
 		{
@@ -32,6 +39,12 @@ namespace an
 		}
 
 		return *this;
+	}*/
+	//ÏÖ´úÐ´·¨
+	string& string::operator=(string tmp)
+	{
+		swap(tmp);
+		return *this;	
 	}
 	string::~string()
 	{
