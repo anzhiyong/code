@@ -6,6 +6,6 @@ using namespace std;
 
 int main()
 {
-	an::test_vector3();
+	an::test_vector5();
 	return 0;
 }
