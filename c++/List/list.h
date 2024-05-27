@@ -19,11 +19,12 @@ namespace an
 	};
 
 	//µü´úÆ÷
-	template <class T>
+	template<class T, class Ref, class Ptr>
+	//template<class T>
 	struct list_iterator
 	{
 		typedef ListNode<T> Node;
-		typedef list_iterator Self;
+		typedef list_iterator<T, Ref, Ptr> Self;
 	
 
 		list_iterator(Node* node)
@@ -35,10 +36,25 @@ namespace an
 			_node = _node->_next;
 			return *this;
 		}
+
+		Self& operator++(int)
+		{
+			Self tmp = *this;
+			_node = _node->_next;
+			return tmp;
+		}
+
 		Self& operator--()
 		{
 			_node = _node->_prev;
 			return *this;
+		}
+
+		Self& operator--(int)
+		{
+			Self tmp(*this);
+			_node = _node->_prev;
+			return tmp;
 		}
 
 		/*Self& operator--(int)
@@ -49,9 +65,14 @@ namespace an
 					return tmp;
 				}*/
 
-		T& operator*()
+		Ref operator*()
 		{
 			return _node->_data;
+		}
+
+		Ptr operator->()
+		{
+			return &_node->_data;
 		}
 
 		bool operator!=(const Self& it)
@@ -59,6 +80,10 @@ namespace an
 			return _node != it._node;
 		}
 
+		bool operator==(const Self& it)
+		{
+			return _node == it._node;
+		}
 	
 		Node* _node;
 	};
@@ -70,7 +95,8 @@ namespace an
 		typedef ListNode<T> Node;
 		
 	public:
-		typedef list_iterator<T> iterator;
+		typedef list_iterator<T, T&, T*> iterator;
+		typedef list_iterator<T, const T&, const T*> const_iterator;
 
 		list()
 		{
@@ -81,8 +107,12 @@ namespace an
 		iterator begin()
 		{
 			iterator it(_head);
-			++it;
 			return it;
+		}
+
+		const_iterator begin() const
+		{
+			return const_iterator(_head);
 		}
 		
 		iterator end()
@@ -91,6 +121,10 @@ namespace an
 			return iterator(_head);
 		}
 
+		const_iterator end() const
+		{
+			return const_iterator(_head);
+		}
 
 		void push_back(const T& x)
 		{
@@ -187,4 +221,38 @@ namespace an
 		}
 		cout << endl;
 	}
+
+	void test_list2()
+	{
+		list<int> l2;
+		l2.push_back(1);
+		l2.push_back(2);
+		l2.push_back(3);
+		l2.push_back(4);
+
+		list<int>::iterator it = l2.begin();
+		while (it != l2.end())
+		{
+			cout << *it << endl;
+			it++;
+		}
+	}
+
+	void test_list3()
+	{
+		list<int> l1;
+		l1.push_back(1);
+		l1.push_back(2);
+		l1.push_back(3);
+		l1.push_back(4);
+		l1.push_back(5);
+
+		list<int>::iterator it = --l1.end();
+		while (it != --l1.begin())
+		{
+			cout << *it << endl;
+			it--;
+		}
+	}
+
 }
