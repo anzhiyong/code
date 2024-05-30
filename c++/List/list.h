@@ -18,6 +18,61 @@ namespace an
 		{}
 	};
 
+
+	//反向迭代器
+	template <class T, class Ref, class Ptr>
+	struct Reverse_iterator
+	{
+		typedef ListNode<T>* Iterator;
+		typedef Reverse_iterator<T, Ref, Ptr> Self;
+		Iterator _it;
+
+		Reverse_iterator(Iterator it)
+			: _it(it) 
+		{}
+
+		Ref operator*() {
+			Iterator tmp = _it;
+			return tmp->_prev->_data;
+		}
+
+		Ptr operator->() {
+			return &(operator*());
+		}
+
+		Self& operator++() {
+			_it = _it->_prev;
+			return *this;
+		}
+
+		Self operator++(int) {
+			Self tmp = *this;
+			_it = _it->_prev;
+			return tmp;
+		}
+
+		Self& operator--() {
+			_it = _it->_next;
+			return *this;
+		}
+
+		Self operator--(int) {
+			Self tmp = *this;
+			_it = _it->_next;
+			return tmp;
+		}
+
+		bool operator==(const Self& other) const {
+			return _it == other._it;
+		}
+
+		bool operator!=(const Self& other) const {
+			return _it != other._it;
+		}
+	};
+	
+
+
 	//迭代器
 	template<class T, class Ref, class Ptr>
 	//template<class T>
@@ -97,6 +152,10 @@ namespace an
 	public:
 		typedef list_iterator<T, T&, T*> iterator;
 		typedef list_iterator<T, const T&, const T*> const_iterator;
+		typedef Reverse_iterator<T, T&, T*> reverse_iterator;
+
+
+		
 
 		list()
 		{
@@ -106,19 +165,31 @@ namespace an
 		}
 		iterator begin()
 		{
-			iterator it(_head);
+			iterator it(_head->_next);
 			return it;
+		}
+
+		reverse_iterator rbegin()
+		{
+			
+			return reverse_iterator(_head);
 		}
 
 		const_iterator begin() const
 		{
-			return const_iterator(_head);
+			return const_iterator(_head->_next);
 		}
 		
 		iterator end()
 		{
 			
 			return iterator(_head);
+		}
+
+		reverse_iterator rend()
+		{
+
+			return reverse_iterator(_head->_next);
 		}
 
 		const_iterator end() const
@@ -254,5 +325,40 @@ namespace an
 			it--;
 		}
 	}
+	void test_iterator()
+	{
+		list<int> vec;
+		vec.push_back(1);
+		vec.push_back(2);
+		vec.push_back(3);
+		vec.push_back(4);
+		vec.push_back(5);
 
+	
+
+	
+
+		list<int>::reverse_iterator it = vec.rbegin();
+		
+		//it++;
+		//cout << *it << endl;//3
+		//it++;
+		//cout << *it << endl;//2
+		//it++;
+		//cout << *it << endl;//1
+		//it++;
+		//cout << *it << endl;//
+		//it++;
+		//cout << *it << endl;
+		//it++;
+		while (it != vec.rend())
+		{
+			cout << *it << endl;
+			++it;
+		}
+		
+		cout << endl;
+
+
+	}
 }
