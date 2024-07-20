@@ -10,6 +10,7 @@ int main()
 	}
 
 	a1.InOrder();
+	cout << a1.IsBalanceTree() << endl;
 
 	return 0;
 }

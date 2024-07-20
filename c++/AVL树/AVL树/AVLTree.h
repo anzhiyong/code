@@ -167,8 +167,43 @@ public:
 		_InOrder(_root);
 		cout << endl;
 	}
+	
+	bool IsBalanceTree()
+	{
+		return _IsBalanceTree(_root);
+	}
 
 private:
+
+	int _Height(Node* root)
+	{
+		if (root == nullptr)
+			return 0;
+
+		int leftHeight = _Height(root->_left);
+		int rightHeight = _Height(root->_right);
+
+		return rightHeight > leftHeight ? rightHeight + 1 : leftHeight + 1;
+	}
+
+	bool _IsBalanceTree(Node* root)
+	{
+		// 空树也是AVL树
+		if (nullptr == root) return true;
+
+		// 计算pRoot节点的平衡因子：即pRoot左右子树的高度差
+		int leftHeight = _Height(root->_left);
+		int rightHeight = _Height(root->_right);
+		int diff = rightHeight - leftHeight;
+			
+			// 如果计算出的平衡因子与pRoot的平衡因子不相等，或者
+			// pRoot平衡因子的绝对值超过1，则一定不是AVL树
+			if (diff != root->_bf || (diff > 1 || diff < -1))
+				return false;
+		// pRoot的左和右如果都是AVL树，则该树一定是AVL树
+		return _IsBalanceTree(root->_left) && _IsBalanceTree(root->_right);
+	}
+
 
 	void RotateLeft(Node* parent)
 	{
