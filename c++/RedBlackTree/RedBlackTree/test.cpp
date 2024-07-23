@@ -2,7 +2,7 @@
 
 int main()
 {
-	RBTree<string, string> rb;
+	/*RBTree<string, string> rb;
 	rb.Insert({ "left","×ó±ß" });
 	rb.Insert({ "right","ÓÒ±ß" });
 	rb.Insert({ "apple","Æ»¹û" });
@@ -10,5 +10,5 @@ int main()
 
 	rb.InOrder();
 	cout << rb.IsBalance() << endl;
-	return 0;
+	return 0;*/
 }

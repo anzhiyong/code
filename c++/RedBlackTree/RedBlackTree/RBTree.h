@@ -8,16 +8,16 @@ enum Color
 	BLACK
 };
 
-template <class K,class V>
+template <class T>
 struct RBTreeNode
 {
-	pair<K, V> _kv;
-	RBTreeNode<K, V>* _left;
-	RBTreeNode<K, V>* _right;
-	RBTreeNode<K, V>* _parent;
+	T _data;
+	RBTreeNode<T>* _left;
+	RBTreeNode<T>* _right;
+	RBTreeNode<T>* _parent;
 	Color _color;
-	RBTreeNode(const pair<K,V>& kv)
-		:_kv(kv)
+	RBTreeNode(const T& data)
+		:_data(data)
 		,_left(nullptr)
 		,_right(nullptr)
 		,_parent(nullptr)
@@ -25,18 +25,46 @@ struct RBTreeNode
 	{}
 };
 
-template <class K,class V>
+template <class T>
+class RBTreeIterator
+{
+	typedef RBTreeNode Node;
+	typedef RBTreeIterator Self;
+
+	Node* _node;
+	RBTreeIterator(Node* node)
+		:_node(node)
+	{}
+
+	Self& operator++()
+	{
+		return *this;
+	}
+
+	Self& operator*
+	{
+		return _node->_data;
+	}
+
+	bool operator!= (const Self& s)
+	{
+		return _node != s._node;
+	}
+
+};
+
+template <class K,class T,class KeyOfT>
 class RBTree
 {
-	typedef RBTreeNode<K,V> Node;
+	typedef RBTreeNode<T> Node;
 public:
 	RBTree() = default;
-	RBTree(const RBTree<K,V>& t)
+	RBTree(const RBTree<K,T, KeyOfT>& t)
 	{
 		_root = Copy(t._root);
 	}
 
-	RBTree<K, V>& operator=(RBTree<K, V> t)
+	RBTree<K, T, KeyOfT>& operator=(RBTree<K, T, KeyOfT> t)
 	{
 		swap(_root, t._root);
 		return *this;
@@ -48,12 +76,13 @@ public:
 		_root = nullptr;
 	}
 
-	bool Insert(const pair<K, V>& kv)
+	KeyOfT kot;
+	bool Insert(const T& data)
 	{
 		//如果红黑树为空，直接插入
 		if (_root == nullptr)
 		{
-			_root = new Node(kv);
+			_root = new Node(data);
 			_root->_color = BLACK;
 			return true;
 		}
@@ -62,12 +91,12 @@ public:
 		Node* parent = nullptr;
 		while (cur)
 		{
-			if (cur->_kv.first > kv.first)
+			if (kot(cur->_data) > kot(data))
 			{
 				parent = cur;
 				cur = cur->_left;
 			}
-			else if (cur->_kv.first < kv.first)
+			else if (kot(cur->_data) < kot(data))
 			{
 				parent = cur;
 				cur = cur->_right;
@@ -78,10 +107,10 @@ public:
 			}
 			
 		}
-		cur = new Node(kv);
+		cur = new Node(data);
 		//新增红色节点
 		cur->_color = RED;
-		if (parent->_left > cur)
+		if (dot(parent->_data) > dot(data))
 		{
 			parent->_left = cur;
 		}
