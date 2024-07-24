@@ -1,4 +1,6 @@
 #include"RBTree.h"
+#include "MySet.h"
+#include "MyMap.h"
 
 int main()
 {
@@ -11,4 +13,6 @@ int main()
 	rb.InOrder();
 	cout << rb.IsBalance() << endl;
 	return 0;*/
+	//an::test_MySet();
+	an::test_MyMap();
 }

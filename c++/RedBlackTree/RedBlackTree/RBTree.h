@@ -1,5 +1,8 @@
 #pragma once
 #include<iostream>
+#include<string>
+#include<vector>
+#include<assert.h>
 using namespace std;
 
 enum Color
@@ -25,30 +28,102 @@ struct RBTreeNode
 	{}
 };
 
-template <class T>
-class RBTreeIterator
+template <class T ,class Ref, class Ptr>
+struct RBTreeIterator
 {
-	typedef RBTreeNode Node;
-	typedef RBTreeIterator Self;
+	typedef RBTreeNode<T> Node;
+	typedef RBTreeIterator<T, Ref, Ptr> Self;
 
 	Node* _node;
-	RBTreeIterator(Node* node)
+	Node* _root;
+	RBTreeIterator(Node* node, Node* root)
 		:_node(node)
+		,_root(root)
 	{}
 
 	Self& operator++()
 	{
+		if (_node->_right)
+		{
+			//右不为空，右子树的最左节点是下一个
+			Node* leftMost = _node->_right;
+			while (leftMost->_left)
+			{
+				leftMost = leftMost->_left;
+			}
+			_node = leftMost;
+		}
+		else
+		{
+			Node* cur = _node;
+			Node* parent = cur->_parent;
+			while (parent && cur == parent->_right)
+			{
+				cur = parent;
+				parent = cur->_parent;
+			}
+			_node = parent;
+
+		}
+		
 		return *this;
 	}
 
-	Self& operator*
+	Self& operator--()
+	{
+		if (_node == nullptr)
+		{
+			Node* rightMost = _root;
+			while (rightMost->_right)
+			{
+				rightMost = rightMost->_right;
+			}
+			_node = rightMost;
+		}
+		else if (_node->_left)
+		{
+			//左不为空，左子树的最右节点
+			Node* rightMost = _node->_left;
+			while (rightMost->_right)
+			{
+				rightMost = rightMost->_right;
+			}
+			_node = rightMost;
+		}
+		else
+		{
+			Node* cur = _node;
+			Node* parent = cur->_parent;
+			while (parent && cur == parent->_left)
+			{
+				cur = parent;
+				parent = cur->_parent;
+			}
+			_node = parent;
+
+		}
+
+		return *this;
+	}
+
+	Ref operator*()
 	{
 		return _node->_data;
+	}
+
+	Ptr operator->()
+	{
+		return &_node->_data;
 	}
 
 	bool operator!= (const Self& s)
 	{
 		return _node != s._node;
+	}
+
+	bool operator== (const Self& s)
+	{
+		return _node == s._node;
 	}
 
 };
@@ -58,13 +133,47 @@ class RBTree
 {
 	typedef RBTreeNode<T> Node;
 public:
+	typedef RBTreeIterator<T, T&, T*> Iterator;
+	typedef RBTreeIterator<T, const T&, const T*> ConstIterator;
+
 	RBTree() = default;
-	RBTree(const RBTree<K,T, KeyOfT>& t)
+	RBTree(const RBTree& t)
 	{
 		_root = Copy(t._root);
 	}
 
-	RBTree<K, T, KeyOfT>& operator=(RBTree<K, T, KeyOfT> t)
+	Iterator Begin()
+	{
+		Node* lastleft = _root;
+		while (lastleft && lastleft->_left)
+		{
+			lastleft = lastleft->_left;
+		}
+		return Iterator(lastleft,_root);
+	}
+
+	Iterator End()
+	{
+		return Iterator(nullptr,_root);
+	}
+
+	ConstIterator Begin() const
+	{
+		Node* leftMost = _root;
+		while (leftMost && leftMost->_left)
+		{
+			leftMost = leftMost->_left;
+		}
+
+		return ConstIterator(leftMost, _root);
+	}
+
+	ConstIterator End() const
+	{
+		return ConstIterator(nullptr, _root);
+	}
+
+	RBTree& operator=(RBTree t)
 	{
 		swap(_root, t._root);
 		return *this;
@@ -77,14 +186,14 @@ public:
 	}
 
 	KeyOfT kot;
-	bool Insert(const T& data)
+	pair<Iterator, bool> Insert(const T& data)
 	{
 		//如果红黑树为空，直接插入
 		if (_root == nullptr)
 		{
 			_root = new Node(data);
 			_root->_color = BLACK;
-			return true;
+			return make_pair(Iterator(_root, _root), true);
 		}
 
 		Node* cur = _root;
@@ -103,14 +212,15 @@ public:
 			}
 			else
 			{
-				return false;
+				return make_pair(Iterator(cur, _root), false);
 			}
 			
 		}
 		cur = new Node(data);
+		Node* newnode = cur;
 		//新增红色节点
 		cur->_color = RED;
-		if (dot(parent->_data) > dot(data))
+		if (kot(parent->_data) > kot(data))
 		{
 			parent->_left = cur;
 		}
@@ -208,7 +318,7 @@ public:
 			}
 		}
 		_root->_color = BLACK;
-		return true;
+		return make_pair(Iterator(newnode, _root), true);
 	}
 
 	bool IsBalance()
@@ -382,5 +492,5 @@ private:
 		return newRoot;
 	}
 private:
-	Node* _root;
+	Node* _root = nullptr;
 };
