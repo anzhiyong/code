@@ -1,41 +1,43 @@
 #pragma once
 #include<iostream>
-#include<string>
-#include<vector>
 #include<assert.h>
 using namespace std;
 
+
+//枚举  ：黑  白
 enum Color
 {
 	RED,
 	BLACK
 };
 
+//创建树节点，存储三叉链：父亲，左节点，右节点
 template <class T>
 struct RBTreeNode
 {
-	T _data;
+	T _data;  //数据 泛型化
 	RBTreeNode<T>* _left;
 	RBTreeNode<T>* _right;
 	RBTreeNode<T>* _parent;
-	Color _color;
+	Color _color;   //存储颜色
 	RBTreeNode(const T& data)
 		:_data(data)
 		,_left(nullptr)
 		,_right(nullptr)
 		,_parent(nullptr)
-		,_color(RED)
 	{}
 };
 
+//迭代器
 template <class T ,class Ref, class Ptr>
 struct RBTreeIterator
 {
 	typedef RBTreeNode<T> Node;
 	typedef RBTreeIterator<T, Ref, Ptr> Self;
 
-	Node* _node;
+	Node* _node;//传入的节点指针
 	Node* _root;
+	//初始化
 	RBTreeIterator(Node* node, Node* root)
 		:_node(node)
 		,_root(root)
@@ -45,7 +47,7 @@ struct RBTreeIterator
 	{
 		if (_node->_right)
 		{
-			//右不为空，右子树的最左节点是下一个
+			//右不为空，右子树的最左节点
 			Node* leftMost = _node->_right;
 			while (leftMost->_left)
 			{
@@ -185,7 +187,7 @@ public:
 		_root = nullptr;
 	}
 
-	KeyOfT kot;
+	
 	pair<Iterator, bool> Insert(const T& data)
 	{
 		//如果红黑树为空，直接插入
@@ -195,7 +197,7 @@ public:
 			_root->_color = BLACK;
 			return make_pair(Iterator(_root, _root), true);
 		}
-
+		KeyOfT kot;
 		Node* cur = _root;
 		Node* parent = nullptr;
 		while (cur)
@@ -226,7 +228,7 @@ public:
 		}
 		else
 		{
-			parent->_left = cur;
+			parent->_right = cur;
 		}
 		cur->_parent = parent;
 		while (parent && parent->_color == RED)

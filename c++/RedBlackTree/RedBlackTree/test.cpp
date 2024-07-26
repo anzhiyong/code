@@ -13,6 +13,6 @@ int main()
 	rb.InOrder();
 	cout << rb.IsBalance() << endl;
 	return 0;*/
-	//an::test_MySet();
+	an::test_MySet();
 	an::test_MyMap();
 }

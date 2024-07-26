@@ -16,6 +16,7 @@ namespace an
 		};
 	public:
 		typedef typename RBTree<K, K, SetKeyOfT>::Iterator iterator;
+		typedef typename RBTree<K, K, SetKeyOfT>::ConstIterator const_iterator;
 
 		iterator begin()
 		{
@@ -23,6 +24,15 @@ namespace an
 		}
 
 		iterator end()
+		{
+			return _rb.End();
+		}
+		const_iterator begin() const
+		{
+			return _rb.Begin();
+		}
+
+		const_iterator end() const
 		{
 			return _rb.End();
 		}
