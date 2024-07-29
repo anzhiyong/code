@@ -1,5 +1,8 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include<iostream>
 using namespace std;
+#include<string>
+#include<map>
 
 //struct Point
 //{
@@ -52,3 +55,55 @@ using namespace std;
 //	cout << typeid(il).name() << endl;
 //	return 0;
 //}
+
+
+//auto :自动推断类型
+//int main()
+//{
+//	int i = 10;
+//	auto p = &i;
+//	auto pf = strcpy;
+//	cout << typeid(p).name() << endl;
+//	cout << typeid(pf).name() << endl;
+//	map<string, string> dict = { {"sort", "排序"}, {"insert", "插入"} };
+//	//map<string, string>::iterator it = dict.begin();
+//	auto it = dict.begin();
+//	return 0;
+//}
+
+
+// decltype的一些使用使用场景
+//关键字decltype将变量的类型声明为表达式指定的类型。
+//template<class T1, class T2>
+//void F(T1 t1, T2 t2)
+//{
+//	decltype(t1 * t2) ret;
+//	cout << typeid(ret).name() << endl;
+//}
+//int main()
+//{
+//	const int x = 1;
+//	double y = 2.2;
+//	decltype(x * y) ret; // ret的类型是double
+//	decltype(&x) p; // p的类型是int*
+//	cout << typeid(ret).name() << endl;
+//	cout << typeid(p).name() << endl;
+//	F(1, 'a');
+//	return 0;
+//}
+
+
+//左值 ， 右值
+int main()
+{
+	// 以下的p、b、c、*p都是左值
+	int* p = new int(0);
+	int b = 1;
+	const int c = 2;
+	// 以下几个是对上面左值的左值引用
+	int*& rp = p;
+	int& rb = b;
+	const int& rc = c;
+	int& pvalue = *p;
+	return 0;
+}
