@@ -165,7 +165,7 @@ namespace open_address
 
 
 //¹þÏ£Í°
-namespace hashbucket
+namespace hash_bucket
 {
 	template <class K,class V>
 	struct HashNode
@@ -179,7 +179,7 @@ namespace hashbucket
 		{}
 	};
 
-	template <class K, class V, class Hash = HashFun<K>>
+	template <class K, class V, class KeyOfT, class Hash = HashFun<K>>
 	class HashTable
 	{
 		typedef HashNode<K,V> Node;
@@ -317,29 +317,29 @@ namespace hashbucket
 		size_t _n = 0;
 	};
 
-	void TestHt1()
-	{
-		HashTable<int, int> ht1;
-		int a[] = { 11,21,4,14,24,15,19};
-		for (auto e : a)
-		{
-			ht1.Insert({ e,e });
-		}
-		//ht1.Insert({ 11,11 });
-		for (auto e : a)
-		{
-			ht1.Erase(e);
-		}
+	//void TestHt1()
+	//{
+	//	HashTable<int, int> ht1;
+	//	int a[] = { 11,21,4,14,24,15,19};
+	//	for (auto e : a)
+	//	{
+	//		ht1.Insert({ e,e });
+	//	}
+	//	//ht1.Insert({ 11,11 });
+	//	for (auto e : a)
+	//	{
+	//		ht1.Erase(e);
+	//	}
 
-	}
+	//}
 
-	void TestHt2()
+	/*void TestHt2()
 	{
 		HashTable<string, string> ht2;
 		ht2.Insert({ "left","×ó±ß" });
 		ht2.Insert({ "right","ÓÒ±ß" });
 		
-	}
+	}*/
 
 
 }
