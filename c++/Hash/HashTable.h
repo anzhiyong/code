@@ -167,23 +167,142 @@ namespace open_address
 //哈希桶
 namespace hash_bucket
 {
-	template <class K,class V>
+	template <class T>
 	struct HashNode
 	{
-		pair<K, V> _kv;
-		HashNode<K,V>* _next;
+		T _data;
+		HashNode<T>* _next;
 
-		HashNode(const pair<K,V>& kv)
-			:_kv(kv)
+		HashNode(const T& data)
+			:_data(data)
 			,_next(nullptr)
 		{}
 	};
 
-	template <class K, class V, class KeyOfT, class Hash = HashFun<K>>
+	template <class K, class T, class KeyOfT, class Hash = HashFun<K>>
+	class HashTable;
+
+	template <class K, class T, class Ptr, class Ref, class KeyOfT, class Hash>
+	struct HTIterator
+	{
+		typedef HTIterator<K, T, Ptr, Ref, KeyOfT, Hash> Self;
+		typedef HashNode<T> Node;
+
+
+		const HashTable<K, T, KeyOfT, Hash>* _pht;
+		Node* _node;
+
+		HTIterator(Node* node, const HashTable<K, T, KeyOfT, Hash>* pht)
+			:_node(node)
+			,_pht(pht)
+		{}
+
+		Ref operator*()
+		{
+			return _node->_data;
+		}
+
+		Ptr operator->()
+		{
+			return &_node->_data;
+		}
+
+		bool operator!=(const Self& s)
+		{
+			return _node != s._node;
+		}
+		Self& operator++()
+		{
+			if (_node->_next)
+			{
+				_node = _node->_next;
+			}
+			else
+			{
+				Hash hs;
+				KeyOfT kot;
+				size_t hashi = hs(kot(_node->_data)) % _pht->_tables.size();
+				++hashi;
+				while (hashi < _pht->_tables.size())
+				{
+					if (_pht->_tables[hashi])
+					{
+						break;
+					}
+
+					++hashi;
+				}
+				if (hashi == _pht->_tables.size())
+				{
+					_node = nullptr; // end()
+				}
+				else
+				{
+					_node = _pht->_tables[hashi];
+				}
+
+			}
+
+			
+
+			return *this;
+		}
+	};
+
+	template <class K, class T, class KeyOfT, class Hash>
 	class HashTable
 	{
-		typedef HashNode<K,V> Node;
+		template <class K, class T, class Ptr, class Ref, class KeyOfT, class Hash>
+		friend struct HTIterator;
+
+		typedef HashNode<T> Node;
 	public:
+		typedef HTIterator<K, T, T*, T&, KeyOfT, Hash> Iterator;
+		typedef HTIterator<K, T, const T*, const T&, KeyOfT, Hash> ConstIterator;
+
+		Iterator Begin()
+		{
+			if (_n == 0)
+			{
+				return End();
+			}
+			for (size_t i = 0; i < _tables.size(); i++)
+			{
+				Node* cur = _tables[i];
+				while (cur)
+				{
+					return Iterator(cur, this);
+				}
+			}
+			return End();
+		}
+
+		Iterator End()
+		{
+			return Iterator(nullptr, this);
+		}
+
+		ConstIterator Begin() const
+		{
+			if (_n == 0)
+			{
+				return End();
+			}
+			for (size_t i = 0; i < _tables.size(); i++)
+			{
+				Node* cur = _tables[i];
+				while (cur)
+				{
+					return Iterator(cur, this);
+				}
+			}
+			return End();
+		}
+
+		ConstIterator End() const
+		{
+			return Iterator(nullptr, this);
+		}
 
 		HashTable()
 		{
@@ -207,11 +326,16 @@ namespace hash_bucket
 			}
 		}
 
-		bool Insert(const pair<K, V>& kv)
+		pair<Iterator, bool> Insert(const T& data)
 		{
 			Hash hs;
+			KeyOfT kot;
+			Iterator it = Find(kot(data));
+			if (it != End())
+				return make_pair(it, false);
+	
 			//计算位置
-			size_t hashi = hs(kv.first) % _tables.size();
+			size_t hashi = hs(kot(data)) % _tables.size();
 			//负载因子==1 扩容
 			if (_n == _tables.size())
 			{
@@ -236,7 +360,7 @@ namespace hash_bucket
 					{
 						Node* next = cur->_next;
 						//算新表中映射的位置
-						size_t hashi = hs(cur->_kv.first) % newtables.size();
+						size_t hashi = hs(kot(cur->_data)) % newtables.size();
 						//把旧表数据头插在新表
 						cur->_next = newtables[hashi];
 						newtables[hashi] = cur;
@@ -250,18 +374,19 @@ namespace hash_bucket
 			}
 
 			//头插
-			Node* newnode = new Node(kv);
+			Node* newnode = new Node(data);
 			newnode->_next = _tables[hashi];
 			_tables[hashi] = newnode;
 			++_n;
 
-			return true;
+			return make_pair(Iterator(newnode, this), true);
 			
 		}
 
-		Node* Find(const K& key)
+		Iterator Find(const K& key)
 		{
 			Hash hs;
+			KeyOfT kot;
 			size_t hashi = hs(key) % _tables.size();
 			//遍历原表
 			for (size_t i = 0; i < _tables.size(); i++)
@@ -269,21 +394,22 @@ namespace hash_bucket
 				Node* cur = _tables[i];
 				while (cur)
 				{
-					if (cur->_kv.first == key)
+					if (kot(cur->_data) == key)
 					{
-						return cur;
+						return Iterator(cur,this);
 					}
 					cur = cur->_next;
 				}
 			}
-			return nullptr;
+			return End();
 
 		}
 
 		bool Erase(const K& key)
 		{
 			Hash hs;
-			size_t hashi = hs(key) % _tables.size();
+			KeyOfT kot;
+			size_t hashi = hs(kot(key)) % _tables.size();
 			//遍历原表
 			Node* prev = nullptr;
 			for (size_t i = 0; i < _tables.size(); i++)
