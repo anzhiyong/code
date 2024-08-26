@@ -25,6 +25,8 @@ void Func()
 	{
 		delete[] arr;
 		throw;
+
+
 	}
 }
 
