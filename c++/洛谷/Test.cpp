@@ -1,5 +1,4 @@
-#include<iostream>
-using namespace std;
+
 
 //int main()
 //{
@@ -262,48 +261,94 @@ using namespace std;
 //}
 
 //P1059 [NOIP2006 普及组] 明明的随机数
+//#include<vector>
+//#include<algorithm>
+//int main()
+//{
+//	int M;
+//	vector<int> nums;
+//	vector<int> nums2;
+//	cin >> M;
+//	for (size_t i = 0; i <M; i++)
+//	{
+//		int a;
+//		cin >> a;
+//		nums.push_back(a);
+//	}
+//	sort(nums.begin(), nums.end());
+//
+//	for (size_t i = 0; i < M; i++)
+//	{
+//		int a = nums[i];
+//		
+//		if (nums2.empty())
+//		{
+//			nums2.push_back(nums[i]);
+//		}
+//		if(a==nums2.back())
+//		{
+//			continue;
+//			
+//		}
+//		else
+//		{
+//			nums2.push_back(a);
+//		}
+//		
+//	}
+//	
+//	cout << nums2.size() << endl;
+//	for (size_t i = 0; i < nums2.size(); i++)
+//	{
+//		cout << nums2[i] << " ";
+//	}
+//
+//
+//	return 0;
+//}
+
+
+//B2029 大象喝水
+//#include<iostream>
+//using namespace std;
+//#include<math.h>
+//#define x 3.14
+//int main()
+//{
+//	//定义高和地面半径
+//	double h, r, v;
+//	cin >> h >> r;
+//	v = r * r * x * h;
+//	double l = ceil(20000 / v);
+//	cout << l;
+//
+//	return 0;
+//}
+
+//P1425 小鱼的游泳时间
+
+
+//P5733 【深基6.例1】自动修正
+#include<iostream>
+using namespace std;
 #include<vector>
-#include<algorithm>
 int main()
 {
-	int M;
-	vector<int> nums;
-	vector<int> nums2;
-	cin >> M;
-	for (size_t i = 0; i <M; i++)
+	vector<char> vc;
+	char c;
+	while (cin >> c)
 	{
-		int a;
-		cin >> a;
-		nums.push_back(a);
-	}
-	sort(nums.begin(), nums.end());
-
-	for (size_t i = 0; i < M; i++)
-	{
-		int a = nums[i];
-		
-		if (nums2.empty())
+		//小写字母
+		if (c >= 97 && c <= 122)
 		{
-			nums2.push_back(nums[i]);
+			c -= 32;
 		}
-		if(a==nums2.back())
-		{
-			continue;
-			
-		}
-		else
-		{
-			nums2.push_back(a);
-		}
-		
+		vc.push_back(c);
 	}
 	
-	cout << nums2.size() << endl;
-	for (size_t i = 0; i < nums2.size(); i++)
+	for (auto e : vc)
 	{
-		cout << nums2[i] << " ";
+		cout << e;
 	}
-
-
 	return 0;
 }
