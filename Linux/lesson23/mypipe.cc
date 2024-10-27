@@ -120,10 +120,9 @@ int main()
             close(fds[0]);
             break;
         }
-        int status = 0;
-        pid_t p = waitpid(id, &status, 0);
-        std::cout << "father wait child success: " << p << " exit code: " <<
-         ((status << 8) & 0xFF) << ", exit sig: " << (status & 0x7F) << std::endl;
+        //这个后面的代码是我不理解的，为什么这种等待写在了子进程代码中
+        //应该写在外面吗
+        exit(0);
     }
     else
     {
@@ -139,11 +138,17 @@ int main()
             //cnt++;
             total = write(fds[1], message.c_str(), message.size());
             //cout << "total:" << total << endl;
-
-            sleep(1);
+            //printf("111\n");
+            //sleep(1);
+            break;
         }
 
-        exit(0);
+        int status = 0;
+        pid_t p = waitpid(id, &status, 0);
+        std::cout << "father wait child success: " << p << " exit code: " <<
+         ((status << 8) & 0xFF) << ", exit sig: " << (status & 0x7F) << std::endl;
+
+        // exit(0);
 
     }
 
