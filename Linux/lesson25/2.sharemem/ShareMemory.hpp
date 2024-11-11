@@ -33,7 +33,7 @@ private:
         }
 
         // 2.
-        int _shmid = ::shmget(_key, gshmsize, shmflg);
+        _shmid = ::shmget(_key, gshmsize, shmflg);
         if (_shmid < 0)
         {
             std::cerr << "shm get error." << std::endl;
