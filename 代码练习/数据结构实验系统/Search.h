@@ -233,6 +233,149 @@ void BTFun() {
         }
     } while (menux != 0);
 }
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define TABLE_SIZE 10 // 哈希表大小
+#define EMPTY -1      // 标记空槽位
+#define DELETED -2    // 标记已删除槽位
+
+typedef struct {
+    int key; // 存储键值
+} HashTable;
+
+// 初始化哈希表
+void initializeTable(HashTable table[]) {
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        table[i].key = EMPTY;
+    }
+}
+
+// 哈希函数
+int hashFunction(int key) {
+    return key % TABLE_SIZE;
+}
+
+// 插入键值到哈希表
+int insert(HashTable table[], int key) {
+    int index = hashFunction(key);
+    int originalIndex = index;
+    while (table[index].key != EMPTY && table[index].key != DELETED) {
+        index = (index + 1) % TABLE_SIZE;
+        if (index == originalIndex) { // 哈希表已满
+            printf("哈希表已满，无法插入 %d\n", key);
+            return 0;
+        }
+    }
+    table[index].key = key;
+    return 1;
+}
+
+// 查找键值
+int search(HashTable table[], int key) {
+    int index = hashFunction(key);
+    int originalIndex = index;
+    while (table[index].key != EMPTY) {
+        if (table[index].key == key) {
+            return index;
+        }
+        index = (index + 1) % TABLE_SIZE;
+        if (index == originalIndex) { // 循环一周，未找到
+            break;
+        }
+    }
+    return -1; // 未找到
+}
+
+// 删除键值
+int delete(HashTable table[], int key) {
+    int index = search(table, key);
+    if (index != -1) {
+        table[index].key = DELETED;
+        return 1;
+    }
+    return 0;
+}
+
+// 打印哈希表
+void displayTable(HashTable table[]) {
+    printf("\n哈希表内容:\n");
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        if (table[i].key == EMPTY) {
+            printf("槽位 %d: EMPTY\n", i);
+        } else if (table[i].key == DELETED) {
+            printf("槽位 %d: DELETED\n", i);
+        } else {
+            printf("槽位 %d: %d\n", i, table[i].key);
+        }
+    }
+}
+
+// 哈希表菜单
+int HashMenu() {
+    HashTable table[TABLE_SIZE];
+    initializeTable(table);
+    int choice;
+
+    do {
+        printf("\n===== 哈希表子系统 =====");
+        printf("\n 1. 插入键值");
+        printf("\n 2. 查找键值");
+        printf("\n 3. 删除键值");
+        printf("\n 4. 显示哈希表");
+        printf("\n 0. 退出");
+        printf("\n请输入选择（0-4）：");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: {
+                int key;
+                printf("请输入要插入的键值: ");
+                scanf("%d", &key);
+                if (insert(table, key)) {
+                    printf("键值 %d 插入成功！\n", key);
+                } else {
+                    printf("键值 %d 插入失败！\n", key);
+                }
+            } break;
+            case 2: {
+                int key;
+                printf("请输入要查找的键值: ");
+                scanf("%d", &key);
+                int index = search(table, key);
+                if (index != -1) {
+                    printf("键值 %d 位于槽位 %d\n", key, index);
+                } else {
+                    printf("键值 %d 不在哈希表中！\n", key);
+                }
+            } break;
+            case 3: {
+                int key;
+                printf("请输入要删除的键值: ");
+                scanf("%d", &key);
+                if (delete(table, key)) {
+                    printf("键值 %d 删除成功！\n", key);
+                } else {
+                    printf("键值 %d 删除失败，键值不存在！\n", key);
+                }
+            } break;
+            case 4:
+                displayTable(table);
+                break;
+            case 0:
+                printf("程序退出。\n");
+                break;
+            default:
+                printf("无效选择，请重新输入。\n");
+        }
+    } while (choice != 0);
+
+    return 0;
+}
+
 int Search() {
     int choice;
     do {
@@ -241,6 +384,7 @@ int Search() {
         printf("\n 2. 二分查找");
         printf("\n 3. 分块查找");
         printf("\n 4. 二叉排序树操作");
+        printf("\n 5. 哈希表");
         printf("\n 0. 退出");
         printf("\n请输入选择（0-4）：");
         scanf("%d", &choice);
@@ -312,6 +456,9 @@ int Search() {
                 break;
             case 4:
                 BTFun();
+                break;
+            case 5:
+                HashMenu();
                 break;
             case 0:
                 printf("程序退出\n");

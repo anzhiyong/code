@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #define MAXSIZE 100
 
 typedef struct {
@@ -16,7 +17,11 @@ int StrLength(String *S) {
 }
 
 void CreatStr(String *S) {
-    gets(S->ch);
+    printf("请输入字符串：");
+    if (fgets(S->ch, MAXSIZE + 1, stdin) != NULL) {
+        // 去掉换行符
+        S->ch[strcspn(S->ch, "\n")] = '\0';
+    }
     S->Len = StrLength(S);
 }
 
@@ -149,7 +154,7 @@ void MenuString()
 {
     /* 显示菜单子函数 */
     printf("\n串子系统");
-    printf("\n= = = = = = = = = = = = = = = = = = = = = = = = =");
+    printf("\n**********************************");
     printf("\n| 1———建立新串并显示该串及长度     |");
     printf("\n| 2———求子串                     |");
     printf("\n| 3———删除子串                   |");
@@ -159,7 +164,7 @@ void MenuString()
     printf("\n| 7———连接两个串                 |");
     printf("\n| 8———子串替换                   |");
     printf("\n| 0———返回                       |");
-    printf("\n= = = = = = = = = = = = = = = = = = = = = = = = =");
+    printf("\n**********************************");
     printf("\n请输入菜单号(0-8):");
 }
 
