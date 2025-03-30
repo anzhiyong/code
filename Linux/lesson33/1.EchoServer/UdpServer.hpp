@@ -12,16 +12,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include "Log.hpp"
+#include "Common.hpp"
 
 using namespace LogModule;
 
-#define Die(code)   \
-    do              \
-    {               \
-        exit(code); \
-    } while (0)
-
-#define CONV(v) (sockaddr *)(v)
 
 const static int gsockfd = -1;
 const static std::string gdefaultip = "127.0.0.1"; // 表示本地主机，用来做测试或本地通信
