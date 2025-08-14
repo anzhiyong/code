@@ -1,5 +1,7 @@
 # Qt Creator / Qt build folders
-build-*/      # 所有 build-* 文件夹
+**/build-*/
+
+   # 所有 build-* 文件夹
 *.pro.user    # Qt Creator 用户配置文件
 *.qmake.stash # QMake 临时文件
 
