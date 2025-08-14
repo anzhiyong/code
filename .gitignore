@@ -1,31 +1,37 @@
-# Build and Release Folders
+# Qt Creator / Qt build folders
+build-*/      # 所有 build-* 文件夹
+*.pro.user    # Qt Creator 用户配置文件
+*.qmake.stash # QMake 临时文件
+
+# Binary and object files
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.exe
+*.out
+*.app
+*.dylib
+
+# Debug/Release folders
+Debug/
+Release/
 bin-debug/
 bin-release/
-[Oo]bj/
-[Bb]in/
 
-# Other files and folders
-.settings/
-
-# Executables
-*.swf
-*.air
-*.ipa
-*.apk
-
-#过滤掉不想要文件和文件夹
-*.exe
+# Visual Studio / IDE files
 *.sln
 *.vcxproj
 *.filters
 *.user
 *.suo
+.vs/
+
+# Other temporary or system files
 *.db
 *.ipch
-Debug/
-.vs
-Release/
-
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+*.swp
+*.DS_Store
+.settings/
